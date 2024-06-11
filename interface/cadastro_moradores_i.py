@@ -40,9 +40,7 @@ def abrir_edicao(dados):
     else:
         messagebox.showerror("Erro", "Dados insuficientes para abrir a edição.")
 
-def abrir_edicao(dados):
-    dados = list(dados)
-    subprocess.Popen(['python', 'cadastro_moradores_editar_i.py'] + dados)
+
 
 def cadastrar():
     nome = entry_1.get()

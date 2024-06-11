@@ -1,6 +1,7 @@
 import subprocess
 import sys
 import os
+import json
 from pathlib import Path
 from funcoesdb import *
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, messagebox
@@ -16,6 +17,23 @@ def voltar():
     args = [sys.executable, str(OUTPUT_PATH / "encomendas_pesquisa_i.py")]
     subprocess.run(args)
 
+if len(sys.argv) > 1:
+        encomenda_data_json = sys.argv[1]
+        encomenda_data = json.loads(encomenda_data_json)
+
+if len(sys.argv) > 1:
+    encomenda_data_json = sys.argv[1]
+    encomenda_data = json.loads(encomenda_data_json)
+    
+    nome = encomenda_data["nome"]
+    bloco = encomenda_data["bloco"]
+    apartamento = encomenda_data["apartamento"]
+    porteiro = encomenda_data["porteiro"]
+    data_entrega = encomenda_data["data_entrega"]
+    id_ = encomenda_data["id"]
+
+
+
 def preencher_entrega():
     entry_nome_entrega.config(state="normal")
     entry_bloco_entrega.config(state="normal")
@@ -23,12 +41,12 @@ def preencher_entrega():
     entry_data_entrega.config(state="normal")
     entry_porteiro_entrega.config(state="normal")
 
-    entry_nome_entrega.insert(0, "Nome de Exemplo")
-    entry_bloco_entrega.insert(0, "Bloco A")
-    entry_apartamento_entrega.insert(0, "101")
-    entry_data_entrega.insert(0, "10/06/2024")
-    entry_porteiro_entrega.insert(0, "Porteiro Exemplo")
-
+    entry_nome_entrega.insert(0,nome)
+    entry_bloco_entrega.insert(0, bloco)
+    entry_apartamento_entrega.insert(0, apartamento)
+    entry_data_entrega.insert(0, data_entrega)
+    entry_porteiro_entrega.insert(0, porteiro)
+    
     entry_nome_entrega.config(state="readonly")
     entry_bloco_entrega.config(state="readonly")
     entry_apartamento_entrega.config(state="readonly")
@@ -49,7 +67,9 @@ def retirada():
 
     if bloco_retirada == bloco_entrega and apartamento_retirada == apartamento_entrega:
         # Se correspondem, chama a função para atualizar as informações no banco de dados
-        inserir_informacoes_encomendas(nome_de_quem_retirou, cpf, data_retirada)
+        inserir_informacoes_encomendas_antigas(nome, apartamento, bloco, data_entrega, data_retirada, porteiro, cpf, nome_de_quem_retirou)
+
+        apagar_dados_outra_tabela(id_)
 
         limpar_entradas()
     else:
@@ -172,6 +192,8 @@ entry_porteiro_entrega.place( x=71.0, y=332.0, width=137.0, height=29.3252582550
 button_image_1 = PhotoImage( file=relative_to_assets("button_1.png"))
 button_1 = Button( image=button_image_1, borderwidth=0, highlightthickness=0, command=retirada, relief="flat")
 button_1.place( x=562.0, y=437.0, width=77.0, height=34.890625)
+
+
 
 preencher_entrega()
 

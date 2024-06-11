@@ -14,14 +14,20 @@ def relative_to_assets(path: str) -> str:
 def cadastro_moradores():
     args = [sys.executable, str(OUTPUT_PATH / "cadastro_moradores_i.py")]
     subprocess.run(args)
+    window.destroy()
+    
 
 def liberar_visitantes():
     args = [sys.executable, str(OUTPUT_PATH / "liberar_visitantes_i.py")]
     subprocess.run(args)
+    window.destroy()
+    
 
 def encomendas():
     args = [sys.executable, str(OUTPUT_PATH / "encomendas_cadastro_i.py")]
     subprocess.run(args)
+    window.destroy()
+    
 
 window = Tk()
 

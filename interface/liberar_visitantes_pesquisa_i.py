@@ -91,9 +91,6 @@ def voltar():
     args = [sys.executable, str(OUTPUT_PATH / "liberar_visitantes_i.py")]
     subprocess.run(args)
 
-def antigas():
-    args = [sys.executable, str(OUTPUT_PATH / "liberar_visitantes_pesquisa2_i.py")]
-    subprocess.run(args)
 
 window = Tk()
 
@@ -159,10 +156,6 @@ def criar_elemetos_pessoa3():
 button_image_4 = PhotoImage( file=relative_to_assets("button_4.png"))
 button_4 = Button( image=button_image_4, borderwidth=0, highlightthickness=0, command=lambda: print("button_4 clicked"), relief="flat")
 button_4.place( x=184.0, y=227.0, width=69.0, height=21.327281951904297)
-
-button_image_5 = PhotoImage( file=relative_to_assets("button_5.png"))
-button_5 = Button( image=button_image_5, borderwidth=0, highlightthickness=0, command=antigas, relief="flat")
-button_5.place( x=253.0, y=77.0, width=180.0, height=40.0)
 
 button_image_6 = PhotoImage( file=relative_to_assets("button_6.png"))
 button_6 = Button( image=button_image_6, borderwidth=0, highlightthickness=0, command=lambda: print("button_6 clicked"), relief="flat")

@@ -4,6 +4,7 @@ import re
 import subprocess
 import os
 from funcoesdb import *
+import json
 from pathlib import Path
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, messagebox
 
@@ -19,15 +20,22 @@ def relative_to_assets(path: str) -> str:
 def voltar():
     args = [sys.executable, str(OUTPUT_PATH / "dashboard_i.py")]
     subprocess.run(args)
+    window.destroy()
 
-def pesquisar():
+def pesquisar_():
     nome = entry_1.get()
     bloco = entry_2.get()
     apartamento = entry_3.get()
-    
-    if nome and bloco and apartamento:  # Verifica se todos os campos estão preenchidos
-        abrir_edicao([nome, bloco, apartamento])
-        window.destroy()
+
+    if nome and bloco and apartamento:
+        # Pesquisar no banco de dados
+        dados_encomenda = pesquisar_encomenda(nome, bloco, apartamento)
+
+        if dados_encomenda:
+            abrir_pesquisa(dados_encomenda)
+            window.destroy()
+        else:
+            messagebox.showinfo("Erro", "Morador não encontrado.")
     else:
         messagebox.showinfo("Erro", "Por favor, preencha todos os campos.")
 
@@ -37,14 +45,17 @@ def cadastrar():
     apartamento = entry_8.get()
     data_entrega = entry_7.get()
     porteiro = entry_4.get()
-    inserir_encomenda(nome, data_entrega, bloco, apartamento, porteiro)
+    inserir_encomenda(nome, data_entrega, bloco, apartamento,porteiro)
 
-def abrir_edicao(dados):
-    if len(dados) == 3:
-        args = [sys.executable, str(OUTPUT_PATH / "encomendas_pesquisa_I.py")] + list(map(str, dados))
+def abrir_pesquisa(dados_encomenda):
+    print("Comprimento dos dados da encomenda:", len(dados_encomenda))
+    if len(dados_encomenda) >= 1 :
+        args = [sys.executable, str(OUTPUT_PATH / "encomendas_pesquisa_I.py"),json.dumps(dados_encomenda)]
         subprocess.run(args)
+        window.destroy()
     else:
         messagebox.showerror("Erro", "Dados insuficientes para abrir a edição.")
+
 
 window = Tk()
 

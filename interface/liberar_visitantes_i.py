@@ -3,7 +3,8 @@ import sys
 import subprocess
 from pathlib import Path
 import sqlite3
-from tkinter import Tk, Canvas, Frame, Entry, Text, Button, PhotoImage
+import json
+from tkinter import Tk, Canvas, Frame, Entry, Text, Button, PhotoImage, messagebox
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_PATH = Path(__file__).parent
@@ -109,18 +110,45 @@ def preencher_pessoa3(nome, hora1, hora2, data, bloco, apto):
     canvas.create_text(310, 519, anchor="nw", text=bloco, fill="#000000", font=("BeVietnamPro Medium", 14 * -1), tags="dinamico")
     canvas.create_text(355, 519, anchor="nw", text=apto, fill="#000000", font=("BeVietnamPro Medium", 14 * -1), tags="dinamico")
 
-
 def pesquisar():
-    global resultados
-    nome_morador = entry_1.get()
+    nome = entry_1.get()
     bloco = entry_2.get()
     apartamento = entry_3.get()
-    resultados = (nome_morador, bloco, apartamento)
-    abrir_arquivo_python_com_resultados(resultados)
 
-def abrir_arquivo_python_com_resultados(resultados):
-    args = [sys.executable, str(OUTPUT_PATH / "liberar_visitantes_pesquisa_i.py")] + list(map(str, resultados))
-    subprocess.run(args)
+    if nome and bloco and apartamento:
+        dados_visitante = pesquisar_visitante(nome, bloco, apartamento)
+
+        if dados_visitante:
+            abrir_pesquisa(dados_visitante)
+            window.destroy()
+        else:
+            messagebox.showinfo("Erro", "Visitante não encontrado.")
+    else:
+        messagebox.showinfo("Erro", "Por favor, preencha todos os campos.")
+
+def pesquisar_visitante(nome, bloco, apartamento):
+    conn = sqlite3.connect('condominio.db')
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT v.nome_visitante, v.horario1, v.horario2, v.data, v.bloco, v.apartamento, m.nome
+        FROM visitantes v
+        INNER JOIN moradores m ON v.morador_id = m.id
+        WHERE m.nome = ? AND v.bloco = ? AND v.apartamento = ?
+    """, (nome, bloco, apartamento))
+    resultado = cursor.fetchall()
+    conn.close()
+    return resultado
+
+
+def abrir_pesquisa(dados_visitante):
+    if len(dados_visitante) >= 1:
+        args = [sys.executable, str(OUTPUT_PATH / "liberar_visitantes_pesquisa_i.py"), json.dumps(dados_visitante)]
+        subprocess.run(args)
+        window.destroy()
+    else:
+        messagebox.showerror("Erro", "Dados insuficientes para abrir a edição.")
+
+
 
 def voltar():
     args = [sys.executable, str(OUTPUT_PATH / "dashboard_i.py")]

@@ -67,6 +67,15 @@ def inserir_visitante(nome_visitante, horario1, horario2, data, nome_morador, bl
 
 
 def pesquisar_morador(nome, bloco, apartamento):
+    if not validar_nome(nome):
+        messagebox.showerror("Erro", "Nome inválido. Deve conter apenas letras e até 50 caracteres.")
+        return
+    if not validar_bloco(bloco):
+        messagebox.showerror("Erro", "Bloco inválido. Deve conter até 10 caracteres alfanuméricos.")
+        return
+    if not validar_apartamento(apartamento):
+        messagebox.showerror("Erro", "Apartamento inválido. Deve conter até 4 números.")
+        return
     conexao = sqlite3.connect('condominio.db')
     cursor = conexao.cursor()
     query ="SELECT nome, cpf, data_nascimento, telefone, bloco, apartamento, placa_carro FROM moradores WHERE nome = ? AND bloco = ? AND apartamento = ?"
@@ -97,7 +106,7 @@ def inserir_encomenda(nome, data_entrega, bloco, apartamento, porteiro):
     conn = sqlite3.connect('condominio.db')
     cursor = conn.cursor()
     cursor.execute('''
-    INSERT INTO encomendas (nome, data_entrega, bloco, apartamento, porteiro)
+    INSERT INTO encomenda (nome, data_entrega, bloco, apartamento, porteiro)
     VALUES (?, ?, ?, ?, ?)
     ''', (nome, data_entrega, bloco, apartamento, porteiro))
     conn.commit()
@@ -106,16 +115,17 @@ def inserir_encomenda(nome, data_entrega, bloco, apartamento, porteiro):
     messagebox.showinfo("Sucesso", "Encomenda inserida com sucesso.")
 
 
-def inserir_informacoes_encomendas(nome_de_quem_retirou, cpf, data_retirada):
+def inserir_informacoes_encomendas(id_, nome_de_quem_retirou, cpf, data_retirada):
     # Conectar ao banco de dados
-    conn = sqlite3.connect('encomendas.db')
+    conn = sqlite3.connect('condominio.db')
     cursor = conn.cursor()
 
     # Inserir informações na tabela
     cursor.execute('''
-        INSERT INTO encomenda (nome_de_quem_retirou, cpf, data_retirada)
-        VALUES (?, ?, ?)
-    ''', (nome_de_quem_retirou, cpf, data_retirada))
+        UPDATE encomenda 
+        SET nome_de_quem_retirou = ?, cpf = ?, data_retirada = ? 
+        WHERE id = ?
+    ''', (nome_de_quem_retirou, cpf, data_retirada, id_))
 
     # Commit e fechar conexão
     conn.commit()
@@ -128,22 +138,122 @@ def editar_morador(nome, cpf, data_nascimento, telefone, bloco, apartamento, pla
         cursor = conn.cursor()
 
         # Query SQL para atualizar os dados do morador
-        query = """
-            UPDATE moradores
-            SET nome = ?, cpf = ?, data_nascimento = ?, telefone = ?, bloco = ?, apartamento = ?, placa_carro = ?
-        """
-
-        # Executar a query SQL
-        cursor.execute(query, (nome, cpf, data_nascimento, telefone, bloco, apartamento, placa_carro))
+        # Atualize as informações do morador no banco de dados
+        cursor.execute("""
+            UPDATE moradores SET 
+                nome = ?, 
+                bloco = ?, 
+                apartamento = ?, 
+                placa_carro = ?, 
+                telefone = ?, 
+                data_nascimento = ?
+            WHERE cpf = ?
+        """, (nome, bloco, apartamento, placa_carro, telefone, data_nascimento, cpf))
         
-        # Commit para salvar as alterações
         conn.commit()
-
-        # Fechar a conexão com o banco de dados
-        cursor.close()
+        affected_rows = cursor.rowcount
         conn.close()
-
-        return True  # Retorna True se a edição for bem-sucedida
+        
+        return affected_rows > 0  # Retorna True se alguma linha foi afetada, caso contrário False
     except sqlite3.Error as e:
-        print("Erro ao editar morador:", e)
-        return False  # Retorna False se ocorrer algum erro
+        print(f"Erro de banco de dados: {e}")
+        raise e
+    except Exception as e:
+        print(f"Erro inesperado: {e}")
+        raise e
+    
+def deletar_morador():
+    try:
+        conn = sqlite3.connect('condominio.db')
+        cursor = conn.cursor()
+
+        # Deleta todas as informações dos moradores no banco de dados
+        cursor.execute("""
+            DELETE FROM moradores 
+            WHERE nome = ? AND cpf = ? AND bloco = ? AND apartamento = ? AND placa_carro = ? AND telefone = ? AND data_nascimento = ?
+        """, (nome, cpf, bloco, apartamento, placa_carro, telefone, data_nascimento))
+        
+        conn.commit()
+        affected_rows = cursor.rowcount
+        conn.close()
+        
+        return affected_rows > 0  # Retorna True se alguma linha foi afetada, caso contrário False
+    except sqlite3.Error as e:
+        print(f"Erro de banco de dados: {e}")
+        raise e
+    except Exception as e:
+        print(f"Erro inesperado: {e}")
+        raise e
+    
+def pesquisar_encomenda(nome, bloco, apartamento):
+    conn = sqlite3.connect('condominio.db')
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT nome, bloco, apartamento, porteiro, data_entrega, id
+        FROM encomenda
+        WHERE nome = ? AND bloco = ? AND apartamento = ?
+        ORDER BY data_entrega ASC
+    """, (nome, bloco, apartamento))  # Forneça os três valores aqui
+    dados_encomenda = cursor.fetchall()
+    conn.close()
+    return dados_encomenda
+
+def buscar_visitantes(nome_morador):
+    conn = sqlite3.connect('condominio.db')
+    cursor = conn.cursor()
+    cursor.execute('''
+    SELECT nome_visitante, horario1, horario2, data
+    FROM visitantes
+    WHERE nome_morador = ?
+    ''', (nome_morador,))
+    visitantes = cursor.fetchall()
+    conn.close()
+    return visitantes
+
+
+def pesquisar_encomenda_antigas(nome, bloco, apartamento):
+    conn = sqlite3.connect('condominio.db')
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT * FROM encomendas_antigas
+        WHERE nome = ? AND bloco = ? AND apartamento = ?
+        ORDER BY data_entrega ASC
+        """, (nome, bloco, apartamento))# Forneça os três valores aqui
+    dados_encomenda_antigas = cursor.fetchall()
+    conn.close()
+    return dados_encomenda_antigas
+
+
+def inserir_informacoes_encomendas_antigas(nome, apartamento, bloco, data_entrega, data_retirada, porteiro, cpf, nome_de_quem_retirou):
+    # Conectar ao banco de dados
+    conn = sqlite3.connect('condominio.db')
+    cursor = conn.cursor()
+    
+    # Criar um cursor para executar consultas SQL
+    cursor = conn.cursor()
+    
+    # Inserir os dados na tabela encomenda_antigas
+    cursor.execute('''INSERT INTO encomenda_antigas (nome, apartamento, bloco, data_entrega, data_retirada, porteiro, cpf, nome_de_quem_retirou)
+                      VALUES (?, ?, ?, ?, ?, ?, ?, ?)''', (nome, apartamento, bloco, data_entrega, data_retirada, porteiro, cpf, nome_de_quem_retirou))
+    
+    # Commit para salvar as alterações no banco de dados
+    conn.commit()
+    
+    # Fechar a conexão com o banco de dados
+    conn.close()
+
+def apagar_dados_outra_tabela(id_):
+    # Conectar ao banco de dados
+    conn = sqlite3.connect('condominio.db')
+    cursor = conn.cursor()
+    
+    # Criar um cursor para executar consultas SQL
+    cursor = conn.cursor()
+    
+    # Inserir os dados na tabela encomenda_antigas
+    cursor.execute('''DELETE FROM encomenda WHERE id = ?''', (id_,))
+    # Commit para salvar as alterações no banco de dados
+    conn.commit()
+    
+    # Fechar a conexão com o banco de dados
+    conn.close()

@@ -24,11 +24,11 @@ def relative_to_assets(path: str) -> str:
 def preencher_entradas_com_dados(nome, cpf, bloco, apartamento, placa_carro, telefone, data_nascimento):
     entry_nome.insert(0, nome)
     entry_cpf.insert(0, cpf)
-    entry_bloco.insert(0, bloco)
-    entry_apartamento.insert(0, apartamento)
-    entry_placa_carro.insert(0, placa_carro)
-    entry_telefone.insert(0, telefone)
-    entry_data_nascimento.insert(0, data_nascimento)
+    entry_bloco.insert(0, placa_carro)
+    entry_apartamento.insert(0, telefone)
+    entry_placa_carro.insert(0, data_nascimento)
+    entry_telefone.insert(0, apartamento)
+    entry_data_nascimento.insert(0, bloco)
 
 def editar_morador(nome, cpf, bloco, apartamento, placa_carro, telefone, data_nascimento):
     try:
@@ -38,6 +38,23 @@ def editar_morador(nome, cpf, bloco, apartamento, placa_carro, telefone, data_na
             messagebox.showinfo("Sucesso", "Morador editado com sucesso.")
         else:
             messagebox.showerror("Erro", "Erro ao editar morador.")
+    except Exception as e:
+        messagebox.showerror("Erro", f"Erro ao acessar o banco de dados: {e}")
+def deletar_morador(): 
+    nome = entry_nome.get()
+    cpf = entry_cpf.get()
+    bloco = entry_bloco.get()
+    apartamento = entry_apartamento.get()
+    placa_carro = entry_placa_carro.get()
+    telefone = entry_telefone.get()
+    data_nascimento = entry_data_nascimento.get() 
+    try:
+        resultado = deletar_morador()
+        
+        if resultado:
+            messagebox.showinfo("Sucesso", "Morador deletado com sucesso.")
+        else:
+            messagebox.showerror("Erro", "Erro ao deletar morador.")
     except Exception as e:
         messagebox.showerror("Erro", f"Erro ao acessar o banco de dados: {e}")
 
@@ -65,7 +82,7 @@ button_1 = Button(image=button_image_1, borderwidth=0, highlightthickness=0, com
 button_1.place(x=56.0, y=525.0, width=90.0, height=40.78125)
 
 button_image_2 = PhotoImage(file=relative_to_assets("button_2.png"))
-button_2 = Button(image=button_image_2, borderwidth=0, highlightthickness=0, command=lambda: print("button_2 clicked"), relief="flat")
+button_2 = Button(image=button_image_2, borderwidth=0, highlightthickness=0, command=deletar_morador, relief="flat")
 button_2.place(x=169.0, y=526.0, width=90.0, height=37.82606506347656)
 
 button_image_3 = PhotoImage(file=relative_to_assets("button_3.png"))
@@ -110,7 +127,7 @@ entry_placa_carro.place(x=65.0, y=472.0, width=137.0, height=29.325258255004883)
 
 canvas.create_text(58.0, 332.0, anchor="nw", text="telefone:", fill="#000000", font=("BeVietnamPro SemiBold", 17 * -1))
 entry_image_telefone = PhotoImage(file=relative_to_assets("entry_6.png"))
-entry_bg_telefone = canvas.create_image(179.0, 369.66262912750244, image=entry_image_telefone)
+entry_bg_telefone = canvas.create_image(164.0, 369.66262912750244, image=entry_image_telefone)
 entry_telefone = Entry(bd=0, bg="#FFFFFF", fg="#000716", highlightthickness=0)
 entry_telefone.place(x=65.0, y=354.0, width=228.0, height=29.325258255004883)
 
