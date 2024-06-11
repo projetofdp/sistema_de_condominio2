@@ -1,12 +1,4 @@
-from .validar_entry import (
-    validar_nome, 
-    validar_cpf, 
-    validar_telefone,  
-    validar_data_nascimento, 
-    validar_bloco, 
-    validar_apartamento, 
-    validar_placa_carro
-)
+from validar_entry import *
 
 
 import sqlite3
@@ -77,14 +69,13 @@ def inserir_visitante(nome_visitante, horario1, horario2, data, nome_morador, bl
 def pesquisar_morador(nome, bloco, apartamento):
     conexao = sqlite3.connect('condominio.db')
     cursor = conexao.cursor()
-    query = "SELECT * FROM moradores WHERE nome = ? AND bloco = ? AND apartamento = ?"
+    query ="SELECT nome, cpf, data_nascimento, telefone, bloco, apartamento, placa_carro FROM moradores WHERE nome = ? AND bloco = ? AND apartamento = ?"
     cursor.execute(query, (nome, bloco, apartamento))
-    resultado = cursor.fetchone()
+    dados = cursor.fetchone()
     conexao.close()
-    return resultado
+    return dados
 
-import sqlite3
-from tkinter import messagebox
+
 
 def inserir_encomenda(nome, data_entrega, bloco, apartamento, porteiro):
     if not validar_nome(nome):
@@ -113,3 +104,46 @@ def inserir_encomenda(nome, data_entrega, bloco, apartamento, porteiro):
     conn.close()
     
     messagebox.showinfo("Sucesso", "Encomenda inserida com sucesso.")
+
+
+def inserir_informacoes_encomendas(nome_de_quem_retirou, cpf, data_retirada):
+    # Conectar ao banco de dados
+    conn = sqlite3.connect('encomendas.db')
+    cursor = conn.cursor()
+
+    # Inserir informações na tabela
+    cursor.execute('''
+        INSERT INTO encomenda (nome_de_quem_retirou, cpf, data_retirada)
+        VALUES (?, ?, ?)
+    ''', (nome_de_quem_retirou, cpf, data_retirada))
+
+    # Commit e fechar conexão
+    conn.commit()
+    conn.close()
+
+def editar_morador(nome, cpf, data_nascimento, telefone, bloco, apartamento, placa_carro):
+    try:
+        # Conectar-se ao banco de dados
+        conn = sqlite3.connect("condominio.db")
+        cursor = conn.cursor()
+
+        # Query SQL para atualizar os dados do morador
+        query = """
+            UPDATE moradores
+            SET nome = ?, cpf = ?, data_nascimento = ?, telefone = ?, bloco = ?, apartamento = ?, placa_carro = ?
+        """
+
+        # Executar a query SQL
+        cursor.execute(query, (nome, cpf, data_nascimento, telefone, bloco, apartamento, placa_carro))
+        
+        # Commit para salvar as alterações
+        conn.commit()
+
+        # Fechar a conexão com o banco de dados
+        cursor.close()
+        conn.close()
+
+        return True  # Retorna True se a edição for bem-sucedida
+    except sqlite3.Error as e:
+        print("Erro ao editar morador:", e)
+        return False  # Retorna False se ocorrer algum erro

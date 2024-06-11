@@ -3,7 +3,7 @@ import sqlite3
 import re
 import subprocess
 import os
-import back
+from funcoesdb import *
 from pathlib import Path
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, messagebox
 
@@ -20,19 +20,29 @@ def pesquisar():
     nome = entry_2.get()
     bloco = entry_7.get()
     apartamento = entry_8.get()
-    
-    if nome and bloco and apartamento:  # Verifica se todos os campos estão preenchidos
-        abrir_edicao([nome, bloco, apartamento])
-        window.destroy()
+
+    if nome and bloco and apartamento:
+        # Pesquisar no banco de dados
+        dados = pesquisar_morador(nome, bloco, apartamento)
+
+        if dados:
+            abrir_edicao(dados)
+            window.destroy()
+        else:
+            messagebox.showinfo("Erro", "Morador não encontrado.")
     else:
         messagebox.showinfo("Erro", "Por favor, preencha todos os campos.")
 
 def abrir_edicao(dados):
-    if len(dados) == 3:
+    if len(dados) == 7:
         args = [sys.executable, str(OUTPUT_PATH / "cadastro_moradores_editar_i.py")] + list(map(str, dados))
         subprocess.run(args)
     else:
         messagebox.showerror("Erro", "Dados insuficientes para abrir a edição.")
+
+def abrir_edicao(dados):
+    dados = list(dados)
+    subprocess.Popen(['python', 'cadastro_moradores_editar_i.py'] + dados)
 
 def cadastrar():
     nome = entry_1.get()
@@ -42,7 +52,7 @@ def cadastrar():
     bloco = entry_4.get()
     apartamento = entry_6.get()
     placa_carro = entry_5.get()
-    back.inserir_morador(nome, cpf, data_nascimento, telefone, bloco, apartamento, placa_carro)
+    inserir_morador(nome, cpf, data_nascimento, telefone, bloco, apartamento, placa_carro)
 
 def voltar():
     args = [sys.executable, str(OUTPUT_PATH / "dashboard_i.py")]

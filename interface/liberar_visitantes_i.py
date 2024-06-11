@@ -83,6 +83,7 @@ def atualizar_dados_canvas(resultados):
             preencher_pessoa3(nome, hora1, hora2, data, bloco, apto)
 
 def preencher_pessoa1(nome, hora1, hora2, data, bloco, apto):
+    criar_elemetos_pessoa1()
     canvas.create_text(115, 173, anchor="nw", text=nome, fill="#000000", font=("BeVietnamPro MediumItalic", 14 * -1), tags="dinamico")
     canvas.create_text(115, 213, anchor="nw", text=hora1, fill="#000000", font=("BeVietnamPro Medium", 14 * -1), tags="dinamico")
     canvas.create_text(181, 213, anchor="nw", text=hora2, fill="#000000", font=("BeVietnamPro Medium", 14 * -1), tags="dinamico")
@@ -91,6 +92,7 @@ def preencher_pessoa1(nome, hora1, hora2, data, bloco, apto):
     canvas.create_text(355, 213, anchor="nw", text=apto, fill="#000000", font=("BeVietnamPro Medium", 14 * -1), tags="dinamico")
 
 def preencher_pessoa2(nome, hora1, hora2, data, bloco, apto):
+    criar_elemetos_pessoa2()
     canvas.create_text(115, 326, anchor="nw", text=nome, fill="#000000", font=("BeVietnamPro MediumItalic", 14 * -1), tags="dinamico")
     canvas.create_text(115, 366, anchor="nw", text=hora1, fill="#000000", font=("BeVietnamPro Medium", 14 * -1), tags="dinamico")
     canvas.create_text(181, 366, anchor="nw", text=hora2, fill="#000000", font=("BeVietnamPro Medium", 14 * -1), tags="dinamico")
@@ -99,6 +101,7 @@ def preencher_pessoa2(nome, hora1, hora2, data, bloco, apto):
     canvas.create_text(355, 366, anchor="nw", text=apto, fill="#000000", font=("BeVietnamPro Medium", 14 * -1), tags="dinamico")
 
 def preencher_pessoa3(nome, hora1, hora2, data, bloco, apto):
+    criar_elemetos_pessoa3()
     canvas.create_text(115, 479, anchor="nw", text=nome, fill="#000000", font=("BeVietnamPro MediumItalic", 14 * -1), tags="dinamico")
     canvas.create_text(115, 519, anchor="nw", text=hora1, fill="#000000", font=("BeVietnamPro Medium", 14 * -1), tags="dinamico")
     canvas.create_text(181, 519, anchor="nw", text=hora2, fill="#000000", font=("BeVietnamPro Medium", 14 * -1), tags="dinamico")
@@ -133,60 +136,60 @@ window.title("Sistema de Condomínio")
 # Criar o canvas
 canvas = Canvas( window, bg="#FFFFFF", height=680, width=950, bd=0, highlightthickness=0, relief="ridge")
 canvas.place(x=0, y=0)
-
-buttons_dinamicos = []
-
-
-image_image_3 = PhotoImage( file=relative_to_assets("image_3.png"))
-image_3 = canvas.create_image( 249.0, 213.0, image=image_image_3, tags="dinamico")
-canvas.create_text( 115.0, 201.0, anchor="nw", text="horário", fill="#7C7C7C", font=("BeVietnamPro Medium", 10 * -1), tags="dinamico")
-canvas.create_text(  270.0, 201.0, anchor="nw", text="Unidade Vinculada", fill="#7C7C7C", font=("BeVietnamPro Medium", 10 * -1), tags="dinamico")
-canvas.create_text( 115.0, 161.0, anchor="nw", text="nome", fill="#7C7C7C", font=("BeVietnamPro Medium", 10 * -1), tags="dinamico")
-canvas.create_text(269.0, 161.0, anchor="nw", text="data", fill="#7C7C7C", font=("BeVietnamPro Medium", 10 * -1), tags="dinamico")
-canvas.create_text( 270.0, 213.0, anchor="nw", text="bloco ", fill="#000000", font=("BeVietnamPro Medium", 14 * -1), tags="dinamico")
-canvas.create_text(324.0, 213.0, anchor="nw", text="apto", fill="#000000", font=("BeVietnamPro Medium", 14 * -1), tags="dinamico")
-canvas.create_text(160.0, 213.0, anchor="nw", text="ás", fill="#000000", font=("BeVietnamPro Medium", 14 * -1), tags="dinamico")
+def criar_elemetos_pessoa1():
+    global image_image_3
+    image_image_3 = PhotoImage(file=relative_to_assets("image_3.png"))
+    image_3 = canvas.create_image(249.0, 213.0, image=image_image_3, tags="dinamico")
+    canvas.create_text( 115.0, 201.0, anchor="nw", text="horário", fill="#7C7C7C", font=("BeVietnamPro Medium", 10 * -1),tags="dinamico")
+    canvas.create_text(  270.0, 201.0, anchor="nw", text="Unidade Vinculada", fill="#7C7C7C", font=("BeVietnamPro Medium", 10 * -1),tags="dinamico")
+    canvas.create_text( 115.0, 161.0, anchor="nw", text="nome", fill="#7C7C7C", font=("BeVietnamPro Medium", 10 * -1),tags="dinamico")
+    canvas.create_text(269.0, 161.0, anchor="nw", text="data", fill="#7C7C7C", font=("BeVietnamPro Medium", 10 * -1),tags="dinamico")
+    canvas.create_text( 270.0, 213.0, anchor="nw", text="bloco ", fill="#000000", font=("BeVietnamPro Medium", 14 * -1),tags="dinamico")
+    canvas.create_text(324.0, 213.0, anchor="nw", text="apto", fill="#000000", font=("BeVietnamPro Medium", 14 * -1),tags="dinamico")
+    canvas.create_text(160.0, 213.0, anchor="nw", text="ás", fill="#000000", font=("BeVietnamPro Medium", 14 * -1),tags="dinamico")
 
 
 button_image_3 = PhotoImage( file=relative_to_assets("button_3.png"))
 button_3 = Button( image=button_image_3, borderwidth=0, highlightthickness=0, command=mover_pessoa1_para_antigos, relief="flat")
 button_3.place( x=212, y=244, width=69, height=21.327281951904297)
-buttons_dinamicos.append(button_3)
 
 
 
 
-image_image_1 = PhotoImage( file=relative_to_assets("image_1.png"))
-image_1 = canvas.create_image(249.0,366.0, image=image_image_1 , tags="dinamico")
-canvas.create_text( 115.0, 354.0, anchor="nw", text="horário", fill="#8C8C8C", font=("BeVietnamPro Medium", 10 * -1), tags="dinamico")
-canvas.create_text( 270.0, 354.0, anchor="nw", text="Unidade Vinculada", fill="#7C7C7C", font=("BeVietnamPro Medium", 10 * -1), tags="dinamico")
-canvas.create_text( 115.0, 314.0, anchor="nw", text="nome", fill="#7C7C7C", font=("BeVietnamPro Medium", 10 * -1), tags="dinamico")
-canvas.create_text( 269.0, 314.0, anchor="nw", text="data", fill="#7C7C7C", font=("BeVietnamPro Medium", 10 * -1), tags="dinamico")
-canvas.create_text(  270.0,  366.0,  anchor="nw",  text="bloco ",  fill="#000000",  font=("BeVietnamPro Medium", 14 * -1), tags="dinamico")
-canvas.create_text( 324.0, 366.0, anchor="nw", text="apto", fill="#000000", font=("BeVietnamPro Medium", 14 * -1), tags="dinamico")
-canvas.create_text( 160.0, 366.0, anchor="nw", text="ás", fill="#000000", font=("BeVietnamPro Medium", 14 * -1), tags="dinamico")
+def criar_elemetos_pessoa2():
+    global image_image_1
+    image_image_1 = PhotoImage( file=relative_to_assets("image_1.png"))
+    image_1 = canvas.create_image(249.0,366.0, image=image_image_1 , tags="dinamico")
+    canvas.create_text( 115.0, 354.0, anchor="nw", text="horário", fill="#8C8C8C", font=("BeVietnamPro Medium", 10 * -1), tags="dinamico")
+    canvas.create_text( 270.0, 354.0, anchor="nw", text="Unidade Vinculada", fill="#7C7C7C", font=("BeVietnamPro Medium", 10 * -1), tags="dinamico")
+    canvas.create_text( 115.0, 314.0, anchor="nw", text="nome", fill="#7C7C7C", font=("BeVietnamPro Medium", 10 * -1), tags="dinamico")
+    canvas.create_text( 269.0, 314.0, anchor="nw", text="data", fill="#7C7C7C", font=("BeVietnamPro Medium", 10 * -1), tags="dinamico")
+    canvas.create_text(  270.0,  366.0,  anchor="nw",  text="bloco ",  fill="#000000",  font=("BeVietnamPro Medium", 14 * -1), tags="dinamico")
+    canvas.create_text( 324.0, 366.0, anchor="nw", text="apto", fill="#000000", font=("BeVietnamPro Medium", 14 * -1), tags="dinamico")
+    canvas.create_text( 160.0, 366.0, anchor="nw", text="ás", fill="#000000", font=("BeVietnamPro Medium", 14 * -1), tags="dinamico")
 
 button_image_1 = PhotoImage( file=relative_to_assets("button_1.png"))
 button_1 = Button( image=button_image_1, borderwidth=0, highlightthickness=0, command=mover_pessoa1_para_antigos, relief="flat")
 button_1.place( x=212.0, y=397.0, width=69.0, height=21.327281951904297)
-buttons_dinamicos.append(button_1)
 
 
 
-image_image_2 = PhotoImage( file=relative_to_assets("image_2.png"))
-image_2 = canvas.create_image( 249.0, 519.0, image=image_image_2 , tags="dinamico")
-canvas.create_text( 115.0, 507.0, anchor="nw", text="horário", fill="#7C7C7C", font=("BeVietnamPro Medium", 10 * -1), tags="dinamico")
-canvas.create_text( 270.0, 507.0, anchor="nw", text="Unidade Vinculada", fill="#7C7C7C", font=("BeVietnamPro Medium", 10 * -1), tags="dinamico")
-canvas.create_text( 115.0, 467.0, anchor="nw", text="nome", fill="#7C7C7C", font=("BeVietnamPro Medium", 10 * -1), tags="dinamico")
-canvas.create_text( 269.0, 467.0,  anchor="nw",  text="data",  fill="#7C7C7C", font=("BeVietnamPro Medium", 10 * -1), tags="dinamico")
-canvas.create_text( 270.0, 519.0, anchor="nw", text="bloco ", fill="#000000", font=("BeVietnamPro Medium", 14 * -1), tags="dinamico")
-canvas.create_text( 324.0, 519.0, anchor="nw", text="apto", fill="#000000", font=("BeVietnamPro Medium", 14 * -1), tags="dinamico")
-canvas.create_text( 160.0, 519.0, anchor="nw", text="ás", fill="#000000", font=("BeVietnamPro Medium", 14 * -1), tags="dinamico")
+def criar_elemetos_pessoa3():
+    global image_image_2
+    image_image_2 = PhotoImage( file=relative_to_assets("image_2.png"))
+    image_2 = canvas.create_image( 249.0, 519.0, image=image_image_2 , tags="dinamico")
+    canvas.create_text( 115.0, 507.0, anchor="nw", text="horário", fill="#7C7C7C", font=("BeVietnamPro Medium", 10 * -1), tags="dinamico")
+    canvas.create_text( 270.0, 507.0, anchor="nw", text="Unidade Vinculada", fill="#7C7C7C", font=("BeVietnamPro Medium", 10 * -1), tags="dinamico")
+    canvas.create_text( 115.0, 467.0, anchor="nw", text="nome", fill="#7C7C7C", font=("BeVietnamPro Medium", 10 * -1), tags="dinamico")
+    canvas.create_text( 269.0, 467.0,  anchor="nw",  text="data",  fill="#7C7C7C", font=("BeVietnamPro Medium", 10 * -1), tags="dinamico")
+    canvas.create_text( 270.0, 519.0, anchor="nw", text="bloco ", fill="#000000", font=("BeVietnamPro Medium", 14 * -1), tags="dinamico")
+    canvas.create_text( 324.0, 519.0, anchor="nw", text="apto", fill="#000000", font=("BeVietnamPro Medium", 14 * -1), tags="dinamico")
+    canvas.create_text( 160.0, 519.0, anchor="nw", text="ás", fill="#000000", font=("BeVietnamPro Medium", 14 * -1), tags="dinamico")
 
 button_image_2 = PhotoImage( file=relative_to_assets("button_2.png"))
 button_2 = Button( image=button_image_2, borderwidth=0, highlightthickness=0, command=mover_pessoa1_para_antigos, relief="flat")
 button_2.place( x=212.0, y=550.0, width=69.0, height=21.327281951904297)
-buttons_dinamicos.append(button_2)
+
 
 # textos diversos
 canvas.create_text(45.0, 66.0, anchor="nw", text="hoje", fill="#8EBC4F",font=("BeVietnamPro SemiBold", 45 * -1))
@@ -227,7 +230,6 @@ button_image_5 = PhotoImage(file=relative_to_assets("button_5.png"))
 button_5 = Button(image=button_image_5,borderwidth=0,highlightthickness=0,command=voltar,relief="flat")
 button_5.place( x=69.0,y=34.0,width=30.0,height=15.0)
 canvas.create_rectangle(474.0, 90.0, 476.0, 590.0, fill="#FFFFFF", outline="")
-
 
 
 resultados = obter_informacoes_do_banco_de_dados()

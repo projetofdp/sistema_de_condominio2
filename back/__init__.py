@@ -1,1 +1,0 @@
-from banco_de_dados.funcoesdb import *

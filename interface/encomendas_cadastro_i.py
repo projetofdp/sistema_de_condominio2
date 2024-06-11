@@ -3,7 +3,7 @@ import sqlite3
 import re
 import subprocess
 import os
-import back
+from funcoesdb import *
 from pathlib import Path
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, messagebox
 
@@ -37,11 +37,11 @@ def cadastrar():
     apartamento = entry_8.get()
     data_entrega = entry_7.get()
     porteiro = entry_4.get()
-    back.inserir_encomenda(nome, data_entrega, bloco, apartamento, porteiro)
+    inserir_encomenda(nome, data_entrega, bloco, apartamento, porteiro)
 
 def abrir_edicao(dados):
     if len(dados) == 3:
-        args = [sys.executable, str(OUTPUT_PATH / "cadastro_pesquisa_I.py")] + list(map(str, dados))
+        args = [sys.executable, str(OUTPUT_PATH / "encomendas_pesquisa_I.py")] + list(map(str, dados))
         subprocess.run(args)
     else:
         messagebox.showerror("Erro", "Dados insuficientes para abrir a edição.")
